@@ -1,0 +1,180 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#050706"><title>Neomedi Teleprompter</title><style>
+:root{--fs:42px;--accent:#b9a45c}*{box-sizing:border-box}html,body{margin:0;background:#050706;color:#f6f6f2;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif;height:100%}button,input,textarea{font:inherit}.bar{position:fixed;z-index:5;left:0;right:0;top:0;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;background:rgba(5,7,6,.94);border-bottom:1px solid #262a27;display:flex;gap:7px;align-items:center;flex-wrap:wrap}.brand{font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-right:auto}.btn{border:1px solid #3b403c;background:#151815;color:white;border-radius:10px;padding:9px 12px;font-size:14px}.primary{background:#e8e8e2;color:#080908;border-color:#e8e8e2;font-weight:700}.speed{width:95px}.timer{font-variant-numeric:tabular-nums;font-size:14px;min-width:48px;text-align:right}.stage{height:100vh;overflow-y:auto;scroll-behavior:auto;padding:140px 8vw 70vh}.script{max-width:900px;margin:auto;font-size:var(--fs);line-height:1.42;font-weight:500;white-space:pre-wrap;outline:none}.script b,.script strong{color:#fff;font-weight:800}.cue{color:var(--accent);font-size:.62em;font-weight:700;letter-spacing:.05em}.marker{position:fixed;z-index:3;left:0;right:0;top:46%;border-top:1px solid rgba(185,164,92,.35);pointer-events:none}.edit{position:fixed;z-index:10;inset:0;background:#0b0d0b;padding:calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));display:none}.edit.open{display:flex;flex-direction:column;gap:10px}.edit textarea{flex:1;background:#111411;color:white;border:1px solid #363b37;border-radius:12px;padding:14px;font-size:18px;line-height:1.4}.editrow{display:flex;gap:8px}.editrow button{flex:1}.hidden{display:none!important}@media(min-width:700px){:root{--fs:50px}.stage{padding-left:12vw;padding-right:12vw}}</style></head><body>
+<div class="bar" id="bar"><div class="brand">NEOMEDI · TELEPROMPTER</div><button class="btn primary" id="play">▶ Avvia</button><button class="btn" id="reset">↺</button><button class="btn" id="minus">A−</button><button class="btn" id="plus">A+</button><input class="speed" id="speed" type="range" min="5" max="80" value="24"><button class="btn" id="editBtn">Testo</button><button class="btn" id="stageBtn">Palco</button><div class="timer" id="timer">00:00</div></div><div class="marker"></div>
+<main class="stage" id="stage"><article class="script" id="script"></article></main>
+<div class="edit" id="edit"><textarea id="editor"></textarea><div class="editrow"><button class="btn" id="cancel">Annulla</button><button class="btn primary" id="save">Salva testo</button></div></div>
+<script>
+const defaultText=`Cari amici,
+
+viviamo una stagione straordinaria.
+
+Una stagione di quelle che probabilmente segnano un prima e un dopo.
+
+[PAUSA]
+
+Un’epoca che forse nessuno di noi avrebbe immaginato potesse arrivare con questa velocità, con questa forza di cambiamento.
+
+Pensate a quello che è accaduto negli ultimi anni.
+
+Airbnb è diventata una delle più grandi realtà dell’ospitalità mondiale senza possedere gli alberghi in cui dormiamo.
+
+Uber ha rivoluzionato la mobilità senza costruire automobili.
+
+Amazon è diventata uno dei più grandi luoghi di commercio del mondo senza produrre la gran parte di ciò che vende.
+
+[PAUSA]
+
+Che cosa hanno avuto in comune?
+
+Hanno saputo cogliere un cambiamento tecnologico e trasformarlo in un modo completamente nuovo di organizzare servizi, lavoro e relazioni.
+
+Ma oggi sta accadendo qualcosa di ancora più profondo.
+
+Oggi il motore di questa trasformazione ha un nome: INTELLIGENZA ARTIFICIALE.
+
+[PAUSA — GUARDA LA PLATEA]
+
+E dobbiamo evitare due errori.
+
+Il primo è averne paura.
+
+Il secondo, forse ancora più grave, è pensare che sia semplicemente una tecnologia in più.
+
+Non lo è.
+
+Sta cambiando il modo in cui cerchiamo informazioni, le elaboriamo, prendiamo decisioni, produciamo, comunichiamo.
+
+Sta cambiando le professioni.
+
+Sta cambiando le imprese.
+
+E sta cambiando il mondo del lavoro.
+
+Per questo vorrei lasciarvi tre cartoline.
+
+Tre immagini molto semplici sulle quali riflettere insieme.
+
+PRIMA CARTOLINA
+IL FUTURO È GIÀ QUI.
+
+[PAUSA]
+
+Per anni abbiamo parlato del lavoro del futuro.
+
+Oggi questa espressione rischia di essere già vecchia.
+
+Perché il futuro è già entrato nel lavoro.
+
+È nei nostri telefoni. Nei nostri uffici. Nelle fabbriche. Nelle professioni. Nei servizi.
+
+È nel modo in cui cerchiamo una risposta, prepariamo un documento, analizziamo dei dati, prendiamo una decisione.
+
+[PAUSA]
+
+La domanda, quindi, non è più:
+
+“Arriverà l’intelligenza artificiale?”
+
+La domanda è:
+
+“Come vogliamo governarla?”
+
+E soprattutto:
+
+“Quale posto vogliamo dare alla persona dentro questa trasformazione?”
+
+SECONDA CARTOLINA
+LA NUOVA DISUGUAGLIANZA.
+
+[PAUSA]
+
+Io credo che nei prossimi anni possa nascere una nuova grande frattura.
+
+Non soltanto tra chi ha un lavoro e chi non ce l’ha.
+
+Ma tra chi avrà gli strumenti per utilizzare queste nuove opportunità e chi ne resterà escluso.
+
+[PAUSA]
+
+E allora la capacità di comprendere l’intelligenza artificiale, di utilizzarla consapevolmente, di conoscerne le opportunità ma anche i limiti e i rischi, non è più soltanto una questione tecnologica.
+
+Diventa una questione sociale.
+
+Diventa una questione di competenze. Di opportunità.
+
+E progressivamente, io credo, anche una questione di diritti.
+
+Perché una tecnologia così potente non può diventare il privilegio di pochi.
+
+TERZA CARTOLINA
+IL SINDACATO.
+
+[PAUSA — GUARDA LA PLATEA]
+
+E qui arriviamo a noi.
+
+Di fronte a un cambiamento di queste dimensioni, un grande sindacato non può limitarsi ad osservare.
+
+Deve comprenderlo. Deve esserci.
+
+E deve soprattutto fare in modo che nessuno venga lasciato indietro.
+
+[PAUSA]
+
+Perché se una grande organizzazione radicata nel Paese aiuta migliaia di persone a comprendere questi strumenti, a conoscerne le opportunità, a utilizzarli consapevolmente, non sta semplicemente offrendo un servizio ai propri iscritti.
+
+[PAUSA]
+
+Sta facendo qualcosa di più.
+
+STA RENDENDO UN SERVIZIO AL PAESE.
+
+[PAUSA LUNGA]
+
+Sta contribuendo a ridurre una nuova forma di disuguaglianza.
+
+Sta provando a fare in modo che l’innovazione non divida le persone, ma aumenti le opportunità delle persone.
+
+[PAUSA]
+
+Ed è forse questa la sfida più importante.
+
+Non scegliere tra tecnologia e persone.
+
+Ma fare in modo che la tecnologia aumenti le possibilità delle persone.
+
+E credo che un sindacato moderno debba avere il coraggio di stare esattamente lì:
+
+dove cambia il lavoro,
+
+dove nascono nuovi diritti,
+
+dove si costruisce il futuro.
+
+[PAUSA LUNGA — GUARDA LA PLATEA]
+
+La CISAL ha deciso di cominciare questo percorso.
+
+Ma a questo punto, invece di raccontarvi io come abbiamo deciso di farlo...
+
+[PAUSA]
+
+preferisco farvelo vedere.
+
+[GUARDA LO SCHERMO]
+
+Vediamo il video.`;
+let raw=localStorage.getItem('neo_script')||defaultText, running=false, last=0, elapsed=0, fs=Number(localStorage.getItem('neo_fs')||42);
+const stage=document.getElementById('stage'), script=document.getElementById('script'), speed=document.getElementById('speed'), play=document.getElementById('play'), timer=document.getElementById('timer'), bar=document.getElementById('bar');
+function esc(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function render(){script.innerHTML=esc(raw).replace(/\[([^\]]+)\]/g,'<span class="cue">[$1]</span>').replace(/^(PRIMA CARTOLINA|SECONDA CARTOLINA|TERZA CARTOLINA|IL FUTURO È GIÀ QUI\.|LA NUOVA DISUGUAGLIANZA\.|IL SINDACATO\.|STA RENDENDO UN SERVIZIO AL PAESE\.|INTELLIGENZA ARTIFICIALE\.)$/gm,'<strong>$1</strong>')}
+function tick(t){if(running){if(last){let dt=Math.min(50,t-last);stage.scrollTop+=Number(speed.value)*dt/1000;elapsed+=dt;timer.textContent=String(Math.floor(elapsed/60000)).padStart(2,'0')+':'+String(Math.floor(elapsed/1000)%60).padStart(2,'0')}last=t;requestAnimationFrame(tick)}}
+function toggle(){running=!running;play.textContent=running?'❚❚ Pausa':'▶ Avvia';last=0;if(running)requestAnimationFrame(tick)}
+play.onclick=toggle; document.getElementById('reset').onclick=()=>{running=false;play.textContent='▶ Avvia';stage.scrollTop=0;elapsed=0;timer.textContent='00:00'};
+function setFs(v){fs=Math.max(26,Math.min(72,v));document.documentElement.style.setProperty('--fs',fs+'px');localStorage.setItem('neo_fs',fs)}
+setFs(fs);document.getElementById('plus').onclick=()=>setFs(fs+3);document.getElementById('minus').onclick=()=>setFs(fs-3);
+const edit=document.getElementById('edit'),editor=document.getElementById('editor');document.getElementById('editBtn').onclick=()=>{editor.value=raw;edit.classList.add('open')};document.getElementById('cancel').onclick=()=>edit.classList.remove('open');document.getElementById('save').onclick=()=>{raw=editor.value;localStorage.setItem('neo_script',raw);render();edit.classList.remove('open')};
+document.getElementById('stageBtn').onclick=async()=>{bar.classList.toggle('hidden');try{if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen()}catch(e){}};
+stage.addEventListener('click',e=>{if(bar.classList.contains('hidden')){toggle()}});
+render();
+</script></body></html>
