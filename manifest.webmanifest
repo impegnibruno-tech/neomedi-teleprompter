@@ -1,0 +1,11 @@
+{
+  "name": "Neomedi Teleprompter",
+  "short_name": "Teleprompter",
+  "description": "Teleprompter Neomedi per lettura da palco",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "any"
+}
