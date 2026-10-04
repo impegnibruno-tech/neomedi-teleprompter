@@ -11,8 +11,10 @@
   .stage{padding:82px max(12vw,calc(18px + env(safe-area-inset-left))) 72vh max(12vw,calc(18px + env(safe-area-inset-left)))}
   .script{max-width:1100px;font-size:clamp(28px,5.2vw,44px);line-height:1.34}
   .marker{top:34%}
-}</style></head><body>
+}.stageExit{position:fixed;z-index:30;top:calc(10px + env(safe-area-inset-top));right:calc(10px + env(safe-area-inset-right));border:1px solid #555;background:rgba(0,0,0,.62);color:#fff;border-radius:999px;padding:8px 12px;font:600 13px system-ui;display:none;backdrop-filter:blur(6px)}body.stageMode .stageExit{display:block}
+</style></head><body>
 <div class="bar" id="bar"><div class="brand">NEOMEDI · TELEPROMPTER</div><button class="btn primary" id="play">▶ Avvia</button><button class="btn" id="reset">↺</button><button class="btn" id="minus">A−</button><button class="btn" id="plus">A+</button><button class="btn" id="slower">−</button><div class="speedLabel" id="speedLabel">1.0×</div><button class="btn" id="faster">+</button><input class="speed hidden" id="speed" type="range" min="8" max="80" value="24"><button class="btn" id="editBtn">Testo</button><button class="btn" id="stageBtn">Palco</button><div class="timer" id="timer">00:00</div></div><div class="marker"></div>
+<button id="stageExit" class="stageExit" type="button">Esci</button>
 <main class="stage" id="stage"><article class="script" id="script"></article></main>
 <div class="edit" id="edit"><textarea id="editor"></textarea><div class="editrow"><button class="btn" id="cancel">Annulla</button><button class="btn primary" id="save">Salva testo</button></div></div>
 <script>
@@ -195,17 +197,14 @@ document.getElementById('slower').onclick=()=>{speedLevel=Math.max(8,speedLevel-
 document.getElementById('faster').onclick=()=>{speedLevel=Math.min(80,speedLevel+4);showSpeed()};
 showSpeed();
 const edit=document.getElementById('edit'),editor=document.getElementById('editor');document.getElementById('editBtn').onclick=()=>{editor.value=raw;edit.classList.add('open')};document.getElementById('cancel').onclick=()=>edit.classList.remove('open');document.getElementById('save').onclick=()=>{raw=editor.value;localStorage.setItem('neo_script',raw);render();edit.classList.remove('open')};
-document.getElementById('stageBtn').onclick=async()=>{bar.classList.toggle('hidden');try{if(bar.classList.contains('hidden')){if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen()}else if(document.fullscreenElement&&document.exitFullscreen){await document.exitFullscreen()}}catch(e){}};
+async function enterStage(){bar.classList.add('hidden');document.body.classList.add('stageMode');try{if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen()}catch(e){}}
+async function exitStage(){bar.classList.remove('hidden');document.body.classList.remove('stageMode');try{if(document.fullscreenElement&&document.exitFullscreen)await document.exitFullscreen()}catch(e){}}
+document.getElementById('stageBtn').onclick=enterStage;
+document.getElementById('stageExit').onclick=(e)=>{e.stopPropagation();exitStage()};
 let wakeLock=null;
 async function keepAwake(){try{if('wakeLock' in navigator)wakeLock=await navigator.wakeLock.request('screen')}catch(e){}}
 play.addEventListener('click',()=>{if(running)keepAwake()});
-let tapTimer=null;
-stage.addEventListener('click',()=>{
-  if(!bar.classList.contains('hidden'))return;
-  if(tapTimer){clearTimeout(tapTimer);tapTimer=null;bar.classList.remove('hidden');return}
-  tapTimer=setTimeout(()=>{tapTimer=null;toggle();if(running)keepAwake()},240);
-});
-stage.addEventListener('dblclick',(e)=>{e.preventDefault();if(tapTimer){clearTimeout(tapTimer);tapTimer=null}bar.classList.toggle('hidden')});
+stage.addEventListener('click',()=>{if(document.body.classList.contains('stageMode')){toggle();if(running)keepAwake()}});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&running)keepAwake()});
 render();
 </script><script>
