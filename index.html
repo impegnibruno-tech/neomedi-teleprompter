@@ -168,9 +168,11 @@ let raw=localStorage.getItem('neo_script')||defaultText, running=false, last=0, 
 const stage=document.getElementById('stage'), script=document.getElementById('script'), speed=document.getElementById('speed'), play=document.getElementById('play'), timer=document.getElementById('timer'), bar=document.getElementById('bar');
 function esc(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
 function render(){script.innerHTML=esc(raw).replace(/\[([^\]]+)\]/g,'<span class="cue">[$1]</span>').replace(/^(PRIMA CARTOLINA|SECONDA CARTOLINA|TERZA CARTOLINA|IL FUTURO È GIÀ QUI\.|LA NUOVA DISUGUAGLIANZA\.|IL SINDACATO\.|STA RENDENDO UN SERVIZIO AL PAESE\.|INTELLIGENZA ARTIFICIALE\.)$/gm,'<strong>$1</strong>')}
-function tick(t){if(running){if(last){let dt=Math.min(50,t-last);stage.scrollTop+=Number(speed.value)*dt/1000;elapsed+=dt;timer.textContent=String(Math.floor(elapsed/60000)).padStart(2,'0')+':'+String(Math.floor(elapsed/1000)%60).padStart(2,'0')}last=t;requestAnimationFrame(tick)}}
-function toggle(){running=!running;play.textContent=running?'❚❚ Pausa':'▶ Avvia';last=0;if(running)requestAnimationFrame(tick)}
-play.onclick=toggle; document.getElementById('reset').onclick=()=>{running=false;play.textContent='▶ Avvia';stage.scrollTop=0;elapsed=0;timer.textContent='00:00'};
+let scrollTimer=null;
+function updateTimer(){timer.textContent=String(Math.floor(elapsed/60000)).padStart(2,'0')+':'+String(Math.floor(elapsed/1000)%60).padStart(2,'0')}
+function startScroll(){if(scrollTimer)clearInterval(scrollTimer);scrollTimer=setInterval(()=>{if(!running)return;const px=Math.max(0.4,Number(speed.value)/18);stage.scrollTop+=px;elapsed+=30;updateTimer();if(stage.scrollTop+stage.clientHeight>=stage.scrollHeight-2){running=false;play.textContent='▶ Avvia';clearInterval(scrollTimer);scrollTimer=null}},30)}
+function toggle(){running=!running;play.textContent=running?'❚❚ Pausa':'▶ Avvia';if(running)startScroll();else if(scrollTimer){clearInterval(scrollTimer);scrollTimer=null}}
+play.onclick=toggle; document.getElementById('reset').onclick=()=>{running=false;if(scrollTimer){clearInterval(scrollTimer);scrollTimer=null}play.textContent='▶ Avvia';stage.scrollTop=0;elapsed=0;timer.textContent='00:00'};
 function setFs(v){fs=Math.max(26,Math.min(72,v));document.documentElement.style.setProperty('--fs',fs+'px');localStorage.setItem('neo_fs',fs)}
 setFs(fs);document.getElementById('plus').onclick=()=>setFs(fs+3);document.getElementById('minus').onclick=()=>setFs(fs-3);
 const edit=document.getElementById('edit'),editor=document.getElementById('editor');document.getElementById('editBtn').onclick=()=>{editor.value=raw;edit.classList.add('open')};document.getElementById('cancel').onclick=()=>edit.classList.remove('open');document.getElementById('save').onclick=()=>{raw=editor.value;localStorage.setItem('neo_script',raw);render();edit.classList.remove('open')};
